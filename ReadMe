@@ -2,6 +2,6 @@
 
 涉及到的技术：
 
-1. 利用chromeDriver模拟浏览器行为
+1. 利用chromeDriver操控浏览器，操作界面元素，控制cookie等
 2. 利用jsoup解析静态网页操作页面DOM
 3. 利用Selenium模拟浏览器行为，操作动态页面DOM

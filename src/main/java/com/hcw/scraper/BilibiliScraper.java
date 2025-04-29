@@ -49,7 +49,7 @@ public class BilibiliScraper {
         ChromeDriver driver = new ChromeDriver(options);
         try {
             // 访问UP主视频页面
-            String upId = "456264086";
+            String upId = "16022714";
             String url = "https://space.bilibili.com/" + upId + "/video";
             driver.get(url);
 
@@ -85,7 +85,7 @@ public class BilibiliScraper {
                     System.out.println("当前页:"+(i+1)+"，爬取到了视频数量：" + videoCount);
                     // 筛选出直播回放的标题
                     titleElements = titleElements.stream()
-                             .filter(element -> element.getText().contains("直播回放"))
+                             //.filter(element -> element.getText().contains("直播回放"))
                             .collect(Collectors.toList());
                     for (int j=0;i<titleElements.size();j++) {
                         WebElement element = titleElements.get(j);
