@@ -77,8 +77,10 @@ public class BilibiliScraper {
                         nextPageButton.click();
                 
                         // 等待页面加载
-                        Thread.sleep(5000);
-            
+                        //Thread.sleep(5000);
+                        // B站翻页是局部刷新的，这里等待当前页码的文本变为预期值页数，则判断为翻页后页面渲染成功
+                        WebDriverWait waitRefresh = new WebDriverWait(driver, 20);
+                        waitRefresh.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector(".be-pager-item-active a"), (i+1)+""));
                     }
 
                     // 显式等待下一页按钮可点击
@@ -86,7 +88,7 @@ public class BilibiliScraper {
                     WebElement cubeLisElement = wait
                             .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".cube-list")));
 
-                   // getHtmlContent(driver,i);
+                    getHtmlContent(driver,i);
 
                     // 获取当前页视频标题列表
                     List<WebElement> titleElements = cubeLisElement.findElements(By.cssSelector(".fakeDanmu-item a.title"));
@@ -98,7 +100,7 @@ public class BilibiliScraper {
                             .collect(Collectors.toList());
                     for (int j=0;j<titleElements.size();j++) {
                         WebElement element = titleElements.get(j);
-                        System.out.println("第" + j + "个视频:[" + element.getAttribute("title")+"] ,url:"+element.getAttribute("href"));
+                        System.out.println("第" + (j+1) + "个视频:[" + element.getAttribute("title")+"] ,url:"+element.getAttribute("href"));
                         // String videoName = element.getAttribute("title");
                         // String href = element.getAttribute("href").toString();
                         // String bvid = href.split("/")[4];
