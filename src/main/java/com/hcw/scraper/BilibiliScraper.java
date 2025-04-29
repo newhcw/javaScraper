@@ -56,8 +56,14 @@ public class BilibiliScraper {
             // 等待页面加载
             driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 
+
+            WebDriverWait waitPageTotal = new WebDriverWait(driver, 20);
+            WebElement pageTotalElement = waitPageTotal
+                    .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".be-pager-total")));
+            String pageTotal = pageTotalElement.getText().split(" ")[1];        
+
             // 定义循环变量，控制翻页次数，可根据需求调整
-            int maxPage = 31;
+            int maxPage = Integer.parseInt(pageTotal);
             for (int i = 0; i < maxPage; i++) {
                 try {
 
@@ -79,27 +85,30 @@ public class BilibiliScraper {
                     WebDriverWait wait = new WebDriverWait(driver, 20);
                     WebElement cubeLisElement = wait
                             .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".cube-list")));
+
+                   // getHtmlContent(driver,i);
+
                     // 获取当前页视频标题列表
                     List<WebElement> titleElements = cubeLisElement.findElements(By.cssSelector(".fakeDanmu-item a.title"));
                     int videoCount = titleElements.size();        
-                    System.out.println("当前页:"+(i+1)+"，爬取到了视频数量：" + videoCount);
+                    System.out.println("总页数："+pageTotal+",当前页:"+(i+1)+"，爬取到了视频数量：" + videoCount);
                     // 筛选出直播回放的标题
                     titleElements = titleElements.stream()
                              //.filter(element -> element.getText().contains("直播回放"))
                             .collect(Collectors.toList());
-                    for (int j=0;i<titleElements.size();j++) {
+                    for (int j=0;j<titleElements.size();j++) {
                         WebElement element = titleElements.get(j);
-                        System.out.println("第" + j + "页:[" + element.getAttribute("title")+"] ,url:"+element.getAttribute("href"));
-                        String videoName = element.getAttribute("title");
-                        String href = element.getAttribute("href").toString();
-                        String bvid = href.split("/")[4];
-                        String videoPlayUrl = getVideoPlayUrl(bvid, getCid(bvid));
-                        String videoPath = downloads(videoPlayUrl, videoName);
-                        System.out.println("视频下载成功，存放路径:" + videoPath);
+                        System.out.println("第" + j + "个视频:[" + element.getAttribute("title")+"] ,url:"+element.getAttribute("href"));
+                        // String videoName = element.getAttribute("title");
+                        // String href = element.getAttribute("href").toString();
+                        // String bvid = href.split("/")[4];
+                        // String videoPlayUrl = getVideoPlayUrl(bvid, getCid(bvid));
+                        // String videoPath = downloads(videoPlayUrl, videoName);
+                        // System.out.println("视频下载成功，存放路径:" + videoPath);
 
-                        String finalVideoPath = videoPath;
-                        String audioPath = "D:\\code\\javaScraper\\" + videoName + ".mp3";
-                        mp4ToMp3(finalVideoPath, audioPath);
+                        // String finalVideoPath = videoPath;
+                        // String audioPath = "D:\\code\\javaScraper\\" + videoName + ".mp3";
+                        // mp4ToMp3(finalVideoPath, audioPath);
                        
                     }
                 } catch (Exception e) {
